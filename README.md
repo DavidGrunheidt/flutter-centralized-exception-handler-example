@@ -1,16 +1,8 @@
-# flutter_centralized_exception_handler_example
+# Centralized remotely configurable exception handler in Flutter
 
-A new Flutter project.
+Below is the architecture design of this Flutter app example
 
-## Getting Started
+![FlutterCentralizedRemotlyConfigurableErrorHandler drawio](https://github.com/DavidGrunheidt/flutter-centralized-exception-handler-example/assets/26250624/4165781f-7bef-4cd0-8e7d-b9f0d7b021a4)
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+This medium article explains the goal behind this example app:
+https://medium.com/p/8448374ddc7a
