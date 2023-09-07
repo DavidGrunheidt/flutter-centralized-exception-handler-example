@@ -1,13 +1,19 @@
 import 'dart:async';
 import 'dart:isolate';
 
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_centralized_exception_handler_example/dependencies/error_handler_context_locator.dart';
+import 'package:flutter_centralized_exception_handler_example/dependencies/repository_locator.dart';
+import 'package:flutter_centralized_exception_handler_example/models/crashlytics_error_status_enum.dart';
 
 import 'helpers/app_error_handler.dart';
 
 void main() {
   return runZonedGuarded(() {
+    setupRepositoryLocator();
+
     FlutterError.onError = (details) async {
       FlutterError.presentError(details);
       reportErrorDetails(details);
@@ -58,6 +64,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  @override
+  void initState() {
+    super.initState();
+    registerErrorHandlerContext(context);
+  }
+
   int _counter = 0;
 
   void _incrementCounter() {

@@ -1,6 +1,10 @@
 SHELL := /bin/bash
 .PHONY: ci-tests
 
+gen-code:
+	dart run build_runner build --delete-conflicting-outputs
+	dart format . -l 120
+
 ci-tests:
 	dart format --set-exit-if-changed . -l 120
 	dart analyze
