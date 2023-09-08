@@ -4,6 +4,8 @@ import '../../repositories/remote_config_repository.dart';
 
 GetIt repositoryLocator = GetIt.instance;
 
-void setupRepositoryLocator() {
+Future<void> setupRepositoryLocator() async {
   repositoryLocator.registerLazySingleton<RemoteConfigRepository>(RemoteConfigRepository.new);
+
+  await repositoryLocator<RemoteConfigRepository>().init();
 }

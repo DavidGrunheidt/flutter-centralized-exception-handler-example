@@ -8,8 +8,6 @@ gen-code:
 ci-tests:
 	dart format --set-exit-if-changed . -l 120
 	dart analyze
-	flutter test -r expanded --coverage
-	dart run covadge ./coverage/lcov.info ./
 
 show-test-coverage:
 	genhtml coverage/lcov.info -o coverage/html

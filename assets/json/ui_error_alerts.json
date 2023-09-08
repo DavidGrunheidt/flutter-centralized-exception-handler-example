@@ -4,11 +4,15 @@
     "showOnSnackbar": true
   },
   "CHECK_INTERNET_CONNECTION" : {
-    "message": "Oops! Check your internet connection and try again",
+    "message": "Check your internet connection and try again",
+    "showOnSnackbar": true
+  },
+  "MAPPED_CODE" : {
+    "message": "Message parsed correctly",
     "showOnSnackbar": true
   },
   "GENERIC_FAIL_MESSAGE": {
-    "message": "Oh no! Something went wrong.",
+    "message": "Oh no! Something went really wrong.",
     "showOnSnackbar": true
   }
 }

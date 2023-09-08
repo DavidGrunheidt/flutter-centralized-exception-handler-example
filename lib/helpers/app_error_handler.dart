@@ -1,10 +1,10 @@
 import 'dart:developer';
 
-import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_centralized_exception_handler_example/helpers/app_constants.dart';
 import 'package:flutter_centralized_exception_handler_example/helpers/dio_utils.dart';
 
 import '../dependencies/error_handler_context_locator.dart';
@@ -14,7 +14,6 @@ import '../exceptions/app_exception_code.dart';
 import '../models/crashlytics_error_status_enum.dart';
 import '../models/ui_error_alert.dart';
 import '../repositories/remote_config_repository.dart';
-import 'app_constants.dart';
 import 'app_exception_codes.dart';
 
 CrashlyticsErrorStatusEnum getCrashlyticsErrorStatus(Object error) {
@@ -52,9 +51,7 @@ void reportErrorToUI(Object error, StackTrace? stackTrace) {
   // TODO(DavidGrunheidt): report image loading issue to error reporting server.
   //  if (error is NetworkImageLoadException)
 
-  return handleUiErrorAlert(
-    uiErrorAlert: const UIErrorAlert(message: kGenericExceptionMessage, showOnSnackbar: true),
-  );
+  return handleAppExceptionCode(code: kGenericErrorKey);
 }
 
 void handleDioException(DioException error) {
@@ -67,9 +64,7 @@ void handleDioException(DioException error) {
         return handleAppExceptionCode(code: kCheckInternetConnectionErrorKey);
       default:
         final uiErrorAlerts = repositoryLocator<RemoteConfigRepository>().uiErrorAlerts;
-        final errorCode = uiErrorAlerts.keys.firstWhereOrNull((code) => error.containsErrorCode(code));
-
-        if (errorCode == null) throw Exception();
+        final errorCode = uiErrorAlerts.keys.firstWhere((code) => error.containsErrorCode('[$code]'));
         return handleUiErrorAlert(uiErrorAlert: uiErrorAlerts[errorCode]!);
     }
   } catch (_) {
@@ -82,8 +77,14 @@ void handleDioException(DioException error) {
 void handleAppExceptionCode({
   required String code,
 }) {
-  final uiErrorAlerts = repositoryLocator<RemoteConfigRepository>().uiErrorAlerts;
-  return handleUiErrorAlert(uiErrorAlert: uiErrorAlerts[code]!);
+  try {
+    final uiErrorAlerts = repositoryLocator<RemoteConfigRepository>().uiErrorAlerts;
+    return handleUiErrorAlert(uiErrorAlert: uiErrorAlerts[code]!);
+  } catch (_) {
+    return handleUiErrorAlert(
+      uiErrorAlert: const UIErrorAlert(message: kGenericExceptionMessage, showOnSnackbar: true),
+    );
+  }
 }
 
 void handleUiErrorAlert({
