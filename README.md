@@ -1,6 +1,6 @@
 # Centralized exception handler in Flutter
 
-This is an example for a medium artcile: https://medium.com/p/8448374ddc7a
+This is an example for a [medium artcile](https://medium.com/@davidordine/centralized-remotely-configurable-exception-handler-in-flutter-8448374ddc7a)
 
 Below is the architecture design aim to be achieved in this current flutter app.
 
