@@ -4,6 +4,7 @@ This is an example for a [medium artcile](https://medium.com/@davidordine/centra
 
 Below is the architecture design implemented on this flutter app.
 
-![FlutterCentralizedRemotlyConfigurableErrorHandler drawio](https://github.com/DavidGrunheidt/flutter-centralized-exception-handler-example/assets/26250624/111a37e8-0599-4c97-87a4-9dc2b3d9b8b1)
+![FlutterCentralizedRemotlyConfigurableErrorHandler drawio](https://github.com/DavidGrunheidt/flutter-centralized-exception-handler-example/assets/26250624/01ad6c58-e51c-4528-afc8-821c64c84fe8)
+
 
 
