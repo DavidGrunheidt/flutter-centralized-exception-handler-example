@@ -1,6 +1,6 @@
 {
-  "[DIO_TIMEOUT]" : "The request took too much time. Please try again later",
-  "[CHECK_INTERNET_CONNECTION]" : "Check your internet connection and try again",
-  "[MAPPED_CODE]" : "Message parsed correctly",
-  "[GENERIC_FAIL_MESSAGE]": "Oh no! Something went really wrong."
+  "DIO_TIMEOUT" : "The request took too much time. Please try again later",
+  "CHECK_INTERNET_CONNECTION" : "Check your internet connection and try again",
+  "MAPPED_CODE" : "Message parsed correctly",
+  "GENERIC_FAIL_MESSAGE": "Oh no! Something went really wrong."
 }

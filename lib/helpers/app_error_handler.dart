@@ -58,7 +58,8 @@ void handleDioException(DioException error) {
         return handleAppExceptionCode(code: kCheckInternetConnectionErrorKey);
       default:
         final errorMsg = error.errorMessageDetail;
-        final code = kBracketsContentRegex.allMatches(errorMsg).first.group(0)!;
+        final codeRaw = kBracketsContentRegex.allMatches(errorMsg).first.group(0)!;
+        final code = codeRaw.substring(1, codeRaw.length - 1);
 
         return handleAppExceptionCode(code: code, fallbackMsg: error.errorMessageDetail);
     }
@@ -72,7 +73,7 @@ void handleAppExceptionCode({
   String fallbackMsg = kGenericExceptionMessage,
 }) {
   try {
-    final message = repositoryLocator<RemoteConfigRepository>().getErrorMessage(code);
+    final message = repositoryLocator<RemoteConfigRepository>().getString(code);
     return showErrorMessage(message.isEmpty ? fallbackMsg : message);
   } catch (_) {
     return showErrorMessage(fallbackMsg);
