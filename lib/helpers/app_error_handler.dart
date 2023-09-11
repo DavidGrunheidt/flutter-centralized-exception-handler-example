@@ -72,7 +72,7 @@ void handleAppExceptionCode({
   String fallbackMsg = kGenericExceptionMessage,
 }) {
   try {
-    final message = repositoryLocator<RemoteConfigRepository>().getString(code);
+    final message = repositoryLocator<RemoteConfigRepository>().getErrorMessage(code);
     return showErrorMessage(message.isEmpty ? fallbackMsg : message);
   } catch (_) {
     return showErrorMessage(fallbackMsg);
