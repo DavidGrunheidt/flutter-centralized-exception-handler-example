@@ -113,14 +113,15 @@ class _MyHomePageState extends State<MyHomePage> {
               ElevatedButton(
                 child: const Text('DioException400Unparsed'),
                 onPressed: () => throw DioException(
-                    type: DioExceptionType.badResponse,
+                  type: DioExceptionType.badResponse,
+                  requestOptions: RequestOptions(),
+                  response: Response(
                     requestOptions: RequestOptions(),
-                    response: Response(
-                      requestOptions: RequestOptions(),
-                      data: {
-                        'detail': {'error': '[UNMAPPED_CODE] Unparsed response error message'}
-                      },
-                    )),
+                    data: {
+                      'detail': {'error': '[UNMAPPED_CODE] Unparsed response error message'}
+                    },
+                  ),
+                ),
               ),
               ElevatedButton(
                 child: const Text('DioException400Parsed'),

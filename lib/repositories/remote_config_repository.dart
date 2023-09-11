@@ -6,8 +6,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import '../helpers/app_constants.dart';
-import '../helpers/remote_config_keys.dart';
-import '../models/ui_error_alert.dart';
 
 class RemoteConfigRepository {
   final _remoteConfig = FirebaseRemoteConfig.instance;
@@ -34,17 +32,16 @@ class RemoteConfigRepository {
 
   Future<void> updateConfigs(RemoteConfigUpdate remoteConfigUpdate) => _remoteConfig.activate();
 
-  Map<String, UIErrorAlert> get uiErrorAlerts {
-    final uiErrorAlertJson = _remoteConfig.getString(kUiErrorAlertsKey);
-    final uiErrorAlertMap = json.decode(uiErrorAlertJson) as Map<String, dynamic>;
-    return uiErrorAlertMap.map((key, value) => MapEntry(key, UIErrorAlert.fromJson(value)));
-  }
+  String getString(String key) => _remoteConfig.getString(key);
 
   Future<void> _setDefaultConfigs() async {
-    final uiErrorAlerts = await rootBundle.loadString(uiErrorAlertsJsonPath);
+    final defaultRemoteConfigValues = <String, dynamic>{};
 
-    return _remoteConfig.setDefaults({
-      kUiErrorAlertsKey: uiErrorAlerts,
-    });
+    final uiErrorAlertJsonRaw = await rootBundle.loadString(uiErrorAlertsJsonPath);
+    final uiErrorAlertMapRaw = json.decode(uiErrorAlertJsonRaw) as Map<String, dynamic>;
+    final uiErrorAlertMap = uiErrorAlertMapRaw.map(MapEntry.new);
+    defaultRemoteConfigValues.addAll(uiErrorAlertMap);
+
+    return _remoteConfig.setDefaults(defaultRemoteConfigValues);
   }
 }

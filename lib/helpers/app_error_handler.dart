@@ -1,20 +1,17 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_centralized_exception_handler_example/helpers/app_constants.dart';
-import 'package:flutter_centralized_exception_handler_example/helpers/dio_utils.dart';
 
 import '../dependencies/error_handler_context_locator.dart';
 import '../dependencies/repository_locator.dart';
 import '../design_system/ui_alerts.dart';
 import '../exceptions/app_exception_code.dart';
 import '../models/crashlytics_error_status_enum.dart';
-import '../models/ui_error_alert.dart';
 import '../repositories/remote_config_repository.dart';
+import 'app_constants.dart';
 import 'app_exception_codes.dart';
+import 'dio_utils.dart';
 
 CrashlyticsErrorStatusEnum getCrashlyticsErrorStatus(Object error) {
   if (error is AppExceptionCode) return CrashlyticsErrorStatusEnum.dontReport;
@@ -48,9 +45,6 @@ void reportErrorToUI(Object error, StackTrace? stackTrace) {
   if (error is DioException) return handleDioException(error);
   if (error is AppExceptionCode) return handleAppExceptionCode(code: error.code);
 
-  // TODO(DavidGrunheidt): report image loading issue to error reporting server.
-  //  if (error is NetworkImageLoadException)
-
   return handleAppExceptionCode(code: kGenericErrorKey);
 }
 
@@ -63,45 +57,29 @@ void handleDioException(DioException error) {
       case DioExceptionType.unknown:
         return handleAppExceptionCode(code: kCheckInternetConnectionErrorKey);
       default:
-        final uiErrorAlerts = repositoryLocator<RemoteConfigRepository>().uiErrorAlerts;
-        final errorCode = uiErrorAlerts.keys.firstWhere((code) => error.containsErrorCode('[$code]'));
-        return handleUiErrorAlert(uiErrorAlert: uiErrorAlerts[errorCode]!);
+        final errorMsg = error.errorMessageDetail;
+        final code = kBracketsContentRegex.allMatches(errorMsg).first.group(0)!;
+
+        return handleAppExceptionCode(code: code, fallbackMsg: error.errorMessageDetail);
     }
   } catch (_) {
-    return handleUiErrorAlert(
-      uiErrorAlert: UIErrorAlert(message: error.errorMessageDetail, showOnSnackbar: true),
-    );
+    return showErrorMessage(error.errorMessageDetail);
   }
 }
 
 void handleAppExceptionCode({
   required String code,
+  String fallbackMsg = kGenericExceptionMessage,
 }) {
   try {
-    final uiErrorAlerts = repositoryLocator<RemoteConfigRepository>().uiErrorAlerts;
-    return handleUiErrorAlert(uiErrorAlert: uiErrorAlerts[code]!);
+    final message = repositoryLocator<RemoteConfigRepository>().getString(code);
+    return showErrorMessage(message.isEmpty ? fallbackMsg : message);
   } catch (_) {
-    return handleUiErrorAlert(
-      uiErrorAlert: const UIErrorAlert(message: kGenericExceptionMessage, showOnSnackbar: true),
-    );
+    return showErrorMessage(fallbackMsg);
   }
 }
 
-void handleUiErrorAlert({
-  required UIErrorAlert uiErrorAlert,
-}) {
+void showErrorMessage(String message) {
   final context = getErrorHandlerContext();
-
-  if (uiErrorAlert.showOnSnackbar) {
-    return showSnackbar(
-      context: context,
-      content: '${uiErrorAlert.title == null ? '' : '${uiErrorAlert.title}. '}${uiErrorAlert.message}',
-    );
-  } else if (uiErrorAlert.showOnDialog) {
-    showAppDialog(
-      context: context,
-      title: uiErrorAlert.title,
-      content: Text(uiErrorAlert.message),
-    );
-  }
+  return showSnackbar(context: context, content: message);
 }
